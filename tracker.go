@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 )
 
-func Ticker (ws_url string, account string, venue string, symbol string, results chan Quote) {
+func Tracker (ws_url string, account string, venue string, symbol string, results chan Execution) {
 
-	url := ws_url + "/" + account + "/venues/" + venue + "/tickertape"
+	url := ws_url + "/" + account + "/venues/" + venue + "/executions"
 	conn := ws_connect_until_success(url)
 
 	for {
@@ -20,15 +20,15 @@ func Ticker (ws_url string, account string, venue string, symbol string, results
 		} else {
 
 			var buf bytes.Buffer
-			var q TickerQuote
+			var e Execution
 
 			buf.ReadFrom(reader)
 			s := buf.String()
-			err = json.Unmarshal([]byte(s), &q)
+			err = json.Unmarshal([]byte(s), &e)
 			if err != nil {
 				continue
 			}
-			results <- *q.Quote
+			results <- e
 		}
 	}
 }
