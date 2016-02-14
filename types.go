@@ -1,5 +1,9 @@
 package gofighter
 
+import (
+    "sync"
+)
+
 // Use pointers so missing values are nil after marshalling
 // (this is especially important for a quote). This also means
 // that the JSON printer can skip nil fields if the omitempty
@@ -129,8 +133,10 @@ type OrderList struct {
     Orders              []Order     `json:"orders"`
 }
 
-// These are created by the client to be sent to the server,
-// so more convenient not to make them pointers...
+// The following things are created purely client-side
+// (not marshalled from the server) so more convenient
+// for things not to be pointers...
+
 type RawOrder struct {
     Account             string      `json:"account"`
     Venue               string      `json:"venue"`
@@ -139,4 +145,13 @@ type RawOrder struct {
     OrderType           string      `json:"orderType"`
     Qty                 int         `json:"qty"`
     Price               int         `json:"price"`
+}
+
+type Position struct {
+    Lock                sync.Mutex
+    Account             string
+    Venue               string
+    Symbol              string
+    Cents               int
+    Shares              int
 }
