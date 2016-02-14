@@ -54,6 +54,8 @@ func PositionUpdater(ws_url string, account string, venue string, symbol string,
 	local_chan := make(chan Execution, 64)
 	go Tracker(ws_url, account, venue, symbol, local_chan)
 
+	var updatedpos Position
+
 	for {
 		msg := <- local_chan
 
@@ -65,6 +67,7 @@ func PositionUpdater(ws_url string, account string, venue string, symbol string,
 			pos.Shares -= *msg.Filled
 			pos.Cents += *msg.Price * *msg.Filled
 		}
+		updatedpos = *pos				// Set this inside the lock but send it later (outside the lock), might help avoid deadlocks
 		pos.Lock.Unlock()
 
 		if ws_results != nil {			// Optionally pass on the raw WS msg from Tracker
@@ -72,7 +75,7 @@ func PositionUpdater(ws_url string, account string, venue string, symbol string,
 		}
 
 		if updated_pos_chan != nil {	// Optionally send the current value of pos
-			updated_pos_chan <- *pos
+			updated_pos_chan <- updatedpos
 		}
 	}
 }
