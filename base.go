@@ -11,13 +11,13 @@ import (
 
 func get_json_from_url(protocol string, url string, api_key string, postdata * RawOrder, unmarshaltarget interface{})  error {
 
-	bodybytes, _ := json.Marshal(*postdata)				// if postdata is nil, this becomes "null"
+	bodybytes, _ := json.Marshal(postdata)				// Don't dereference postdata as it might be nil
 	body := bytes.NewBufferString(string(bodybytes))
 
 	client := &http.Client{}
 	req, err := http.NewRequest(protocol, url, body)
 	if err != nil {
-		return err
+		return fmt.Errorf("error calling http.NewRequest: %s", err)
 	}
 	req.Header.Add("X-Starfighter-Authorization", api_key)
 	api_cookie_text := fmt.Sprintf("api_key=%s", api_key)
@@ -25,18 +25,18 @@ func get_json_from_url(protocol string, url string, api_key string, postdata * R
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return fmt.Errorf("error calling client.Do: %s", err)
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
-		return err
+		return fmt.Errorf("error calling ioutil.ReadAll: %s", err)
 	}
 
     err = json.Unmarshal(b, unmarshaltarget)
     if err != nil {
-        return err
+        return fmt.Errorf("error calling json.Unmarshal: %s", err)
     }
 
 	return nil
@@ -103,7 +103,7 @@ func StatusAllOrders
 func StatusAllOrdersOneStock
 */
 
-func Execute(base_url string, api_key string, postdata RawOrder, verbose bool, result_chan chan Order)  (Order, error) {
+func Execute(base_url string, api_key string, postdata RawOrder, result_chan chan Order)  (Order, error) {
 	venue := postdata.Venue
 	symbol := postdata.Symbol
 
@@ -112,9 +112,6 @@ func Execute(base_url string, api_key string, postdata RawOrder, verbose bool, r
 	err := get_json_from_url("POST", url, api_key, &postdata, &ret)
 	if err != nil {
 		return ret, err
-	}
-	if verbose {
-		PrintJSON(ret)
 	}
 	if result_chan != nil {
 		result_chan <- ret
