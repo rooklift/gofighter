@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 )
 
-func Tracker (ws_url string, account string, venue string, symbol string, results chan Execution) {
+func Tracker(ws_url string, account string, venue string, symbol string, results chan Execution) {
 
 	url := ws_url + "/" + account + "/venues/" + venue + "/executions"
 	conn := ws_connect_until_success(url)
