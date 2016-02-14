@@ -98,10 +98,19 @@ func Cancel(base_url string, api_key string, venue string, symbol string, id int
 	return ret, err
 }
 
-/*
-func StatusAllOrders
-func StatusAllOrdersOneStock
-*/
+func StatusAllOrders(base_url string, api_key string, venue string, account string)  (OrderList, error) {
+	var ret OrderList
+	url := base_url + "/venues/" + venue + "/accounts/" + account + "/orders"
+	err := get_json_from_url("GET", url, api_key, nil, &ret)
+	return ret, err
+}
+
+func StatusAllOrdersOneStock(base_url string, api_key string, venue string, account string, symbol string)  (OrderList, error) {
+	var ret OrderList
+	url := base_url + "/venues/" + venue + "/accounts/" + account + "/stocks/" + symbol + "/orders"
+	err := get_json_from_url("GET", url, api_key, nil, &ret)
+	return ret, err
+}
 
 func Execute(base_url string, api_key string, postdata RawOrder, result_chan chan Order)  (Order, error) {
 	venue := postdata.Venue

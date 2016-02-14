@@ -104,6 +104,12 @@ type Order struct {
     Open        *bool       `json:"open"`
 }
 
+type OrderList struct {
+    Ok          *bool       `json:"ok"`
+    Error       *string     `json:"error"`
+    Orders      []Order     `json:"orders"`
+}
+
 // These are created by the client to be sent to the server,
 // so more convenient not to make them pointers...
 type RawOrder struct {
