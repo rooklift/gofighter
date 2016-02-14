@@ -28,7 +28,7 @@ func Ticker (ws_url string, account string, venue string, symbol string, results
 			if err != nil {
 				continue
 			}
-			results <- *q.Quote
+			results <- q.Quote
 		}
 	}
 }

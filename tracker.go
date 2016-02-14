@@ -60,12 +60,12 @@ func PositionUpdater(ws_url string, account string, venue string, symbol string,
 		msg := <- local_chan
 
 		pos.Lock.Lock()
-		if *msg.Order.Direction == "buy" {
-			pos.Shares += *msg.Filled
-			pos.Cents -= *msg.Price * *msg.Filled
+		if msg.Order.Direction == "buy" {
+			pos.Shares += msg.Filled
+			pos.Cents -= msg.Price * msg.Filled
 		} else {
-			pos.Shares -= *msg.Filled
-			pos.Cents += *msg.Price * *msg.Filled
+			pos.Shares -= msg.Filled
+			pos.Cents += msg.Price * msg.Filled
 		}
 		updatedpos = *pos				// Set this inside the lock but send it later (outside the lock), might help avoid deadlocks
 		pos.Lock.Unlock()
