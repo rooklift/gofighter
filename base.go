@@ -23,6 +23,10 @@ func get_json_from_url(protocol string, url string, api_key string, postdata * R
 	api_cookie_text := fmt.Sprintf("api_key=%s", api_key)
 	req.Header.Add("Cookie", api_cookie_text)
 
+	if protocol == "POST" && postdata != nil {
+		req.Header.Add("Content-Type", "application/json")
+	}
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return fmt.Errorf("error calling client.Do: %s", err)
