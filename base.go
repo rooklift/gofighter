@@ -34,10 +34,10 @@ func get_json_from_url(protocol string, url string, api_key string, postdata * R
 		return fmt.Errorf("error calling ioutil.ReadAll: %s", err)
 	}
 
-    err = json.Unmarshal(b, unmarshaltarget)
-    if err != nil {
-        return fmt.Errorf("error calling json.Unmarshal: %s", err)
-    }
+	err = json.Unmarshal(b, unmarshaltarget)
+	if err != nil {
+		return fmt.Errorf("error calling json.Unmarshal: %s", err)
+	}
 
 	return nil
 }
