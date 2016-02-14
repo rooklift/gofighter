@@ -67,7 +67,7 @@ type StockList struct {
 type BookEntry struct {
     Price       *int        `json:"price"`
     Qty         *int        `json:"qty"`
-    IsBuy       *int        `json:"isBuy"`
+    IsBuy       *bool       `json:"isBuy"`
 }
 
 type OrderBook struct {
