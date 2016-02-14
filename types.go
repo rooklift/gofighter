@@ -1,23 +1,26 @@
 package gofighter
 
 // Use pointers so missing values are nil after marshalling
-// (this is especially important for a quote).
+// (this is especially important for a quote). This also means
+// that the JSON printer can skip nil fields if the omitempty
+// tag is given (it WILL still print the field if it's a valid
+// pointer to a zero value -- i.e. (int) 0 or (string) ""
 
-// Also, I assume without evidence that everything that has an "ok"
-// field will produce an "error" field if "ok" is false.
+// Also, I assume without evidence that everything that has an
+// "ok" field will produce an "error" field if "ok" is false.
 
 type Quote struct {
     Ok          *bool       `json:"ok"`
     Error       *string     `json:"error,omitempty"`                // Usually absent
     Venue       *string     `json:"venue"`
     Symbol      *string     `json:"symbol"`
-    Bid         *int        `json:"bid,omitempty"`                  // Can be absent
-    Ask         *int        `json:"ask,omitempty"`                  // Can be absent
+    Bid         *int        `json:"bid,omitempty"`                  // Can be absent, still prints if 0
+    Ask         *int        `json:"ask,omitempty"`                  // Can be absent, still prints if 0
     BidSize     *int        `json:"bidSize"`
     AskSize     *int        `json:"askSize"`
     BidDepth    *int        `json:"bidDepth"`
     AskDepth    *int        `json:"askDepth"`
-    Last        *int        `json:"last,omitempty"`                 // Can be absent
+    Last        *int        `json:"last,omitempty"`                 // Can be absent, still prints if 0
     LastSize    *int        `json:"lastSize,omitempty"`             // Can be absent
     LastTrade   *string     `json:"lastTrade,omitempty"`            // Can be absent
     QuoteTime   *string     `json:"quoteTime"`
