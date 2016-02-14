@@ -23,8 +23,8 @@ func Ticker (ws_url string, account string, venue string, symbol string, results
 			var q TickerQuote
 
 			buf.ReadFrom(reader)
-			s := buf.String()
-			err = json.Unmarshal([]byte(s), &q)
+			b := buf.Bytes()
+			err = json.Unmarshal(b, &q)
 			if err != nil {
 				continue
 			}

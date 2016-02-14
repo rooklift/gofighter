@@ -23,8 +23,8 @@ func Tracker (ws_url string, account string, venue string, symbol string, result
 			var e Execution
 
 			buf.ReadFrom(reader)
-			s := buf.String()
-			err = json.Unmarshal([]byte(s), &e)
+			b := buf.Bytes()
+			err = json.Unmarshal(b, &e)
 			if err != nil {
 				continue
 			}
