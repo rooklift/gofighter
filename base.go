@@ -9,13 +9,13 @@ import (
 	"strconv"
 )
 
-func get_json_from_url(protocol string, url string, api_key string, postdata * RawOrder, unmarshaltarget interface{})  error {
+func get_json_from_url(method string, url string, api_key string, postdata * RawOrder, unmarshaltarget interface{})  error {
 
 	bodybytes, _ := json.Marshal(postdata)				// Don't dereference postdata as it might be nil
 	body := bytes.NewBufferString(string(bodybytes))
 
 	client := &http.Client{}
-	req, err := http.NewRequest(protocol, url, body)
+	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return fmt.Errorf("error calling http.NewRequest: %s", err)
 	}
@@ -23,7 +23,7 @@ func get_json_from_url(protocol string, url string, api_key string, postdata * R
 	api_cookie_text := fmt.Sprintf("api_key=%s", api_key)
 	req.Header.Add("Cookie", api_cookie_text)
 
-	if protocol == "POST" && postdata != nil {
+	if method == "POST" && postdata != nil {
 		req.Header.Add("Content-Type", "application/json")
 	}
 
