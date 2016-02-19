@@ -82,6 +82,12 @@ func LoadGMfile(levelname string)  (Level, error) {
 }
 
 func SaveGMfile(levelname string, level Level)  {
+
+    if levelname == "" {
+        fmt.Println(`SaveGMfile() : filename was ""`)
+        return
+    }
+
     filename := GM_DIRECTORY + "/" + levelname + "_info.txt"
     os.Mkdir(GM_DIRECTORY, 0777)
 
