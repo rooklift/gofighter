@@ -58,14 +58,18 @@ func get_json_from_url(method string, url string, api_key string, postdata * Raw
 	return nil
 }
 
+func MaybeSetStringFromError(s * string, err error)  {
+	if err != nil {
+		*s = err.Error()
+	}
+	return
+}
+
 func CheckAPI(info TradingInfo)  (Heartbeat, error) {
 	var ret Heartbeat
 	url := info.BaseURL + "/heartbeat"
 	err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
-
-	if err != nil {
-		ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(&ret.Error, err)
 	return ret, err
 }
 
@@ -73,10 +77,7 @@ func CheckVenue(info TradingInfo)  (VenueHeartbeat, error) {
 	var ret VenueHeartbeat
 	url := info.BaseURL + "/venues/" + info.Venue + "/heartbeat"
 	err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
-
-	if err != nil {
-		ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(&ret.Error, err)
 	return ret, err
 }
 
@@ -84,10 +85,7 @@ func GetVenueList(info TradingInfo)  (VenueList, error) {
 	var ret VenueList
 	url := info.BaseURL + "/venues"
 	err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
-
-	if err != nil {
-		ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(&ret.Error, err)
 	return ret, err
 }
 
@@ -95,10 +93,7 @@ func GetStockList(info TradingInfo)  (StockList, error) {
 	var ret StockList
 	url := info.BaseURL + "/venues/" + info.Venue + "/stocks"
 	err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
-
-	if err != nil {
-		ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(&ret.Error, err)
 	return ret, err
 }
 
@@ -106,10 +101,7 @@ func GetOrderbook(info TradingInfo)  (OrderBook, error) {
 	var ret OrderBook
 	url := info.BaseURL + "/venues/" + info.Venue + "/stocks/" + info.Symbol
 	err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
-
-	if err != nil {
-		ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(&ret.Error, err)
 	return ret, err
 }
 
@@ -117,10 +109,7 @@ func GetQuote(info TradingInfo)  (Quote, error) {
 	var ret Quote
 	url := info.BaseURL + "/venues/" + info.Venue + "/stocks/" + info.Symbol + "/quote"
 	err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
-
-	if err != nil {
-		*ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(ret.Error, err)
 	return ret, err
 }
 
@@ -128,10 +117,7 @@ func GetStatus(info TradingInfo, id int)  (Order, error) {
 	var ret Order
 	url := info.BaseURL + "/venues/" + info.Venue + "/stocks/" + info.Symbol + "/orders/" + strconv.Itoa(id)
 	err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
-
-	if err != nil {
-		ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(&ret.Error, err)
 	return ret, err
 }
 
@@ -139,10 +125,7 @@ func Cancel(info TradingInfo, id int)  (Order, error) {
 	var ret Order
 	url := info.BaseURL + "/venues/" + info.Venue + "/stocks/" + info.Symbol + "/orders/" + strconv.Itoa(id)
 	err := get_json_from_url("DELETE", url, info.ApiKey, nil, &ret)
-
-	if err != nil {
-		ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(&ret.Error, err)
 	return ret, err
 }
 
@@ -150,10 +133,7 @@ func StatusAllOrders(info TradingInfo)  (OrderList, error) {
 	var ret OrderList
 	url := info.BaseURL + "/venues/" + info.Venue + "/accounts/" + info.Account + "/orders"
 	err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
-
-	if err != nil {
-		ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(&ret.Error, err)
 	return ret, err
 }
 
@@ -161,10 +141,7 @@ func StatusAllOrdersOneStock(info TradingInfo)  (OrderList, error) {
 	var ret OrderList
 	url := info.BaseURL + "/venues/" + info.Venue + "/accounts/" + info.Account + "/stocks/" + info.Symbol + "/orders"
 	err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
-
-	if err != nil {
-		ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(&ret.Error, err)
 	return ret, err
 }
 
@@ -189,9 +166,7 @@ func Execute(info TradingInfo, orderinfo ShortOrderer, result_chan chan Order)  
 	url := info.BaseURL + "/venues/" + info.Venue + "/stocks/" + info.Symbol + "/orders"
 	err := get_json_from_url("POST", url, info.ApiKey, &postdata, &ret)
 
-	if err != nil {
-		ret.Error = err.Error()
-	}
+	MaybeSetStringFromError(&ret.Error, err)
 
 	if result_chan != nil {
 		result_chan <- ret
