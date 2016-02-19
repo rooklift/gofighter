@@ -151,7 +151,7 @@ type ShortOrder struct {    // Like RawOrder, but missing everything we can get 
 
 type TradingInfo struct {
     BaseURL             string      `json:"baseURL"`
-    WebSocketURL        string      `json:"websocketURL"`
+    WebSocketURL        string      `json:"websocketURL,omitempty"`
     ApiKey              string      `json:"apiKey"`
     Account             string      `json:"account"`
     Venue               string      `json:"venue"`
