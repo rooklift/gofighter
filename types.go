@@ -8,7 +8,7 @@ type Quote struct {
     // Use pointers so missing values are nil after marshalling
     // (this is very important for the quote). This also means
     // that the JSON printer can skip nil fields if the omitempty
-    // tag is given (it WILL still print the field if it's a valid
+    // tag is given. It WILL still print the field if it's a valid
     // pointer to a zero value -- i.e. (int) 0 or (string) ""
     Ok                  *bool       `json:"ok"`
     Error               *string     `json:"error,omitempty"`                // Usually absent
@@ -132,7 +132,7 @@ type OrderList struct {
 // The following things are created purely client-side
 // (not marshalled from the server)...
 
-type RawOrder struct {
+type RawOrder struct {      // This is what actually gets marshalled and sent to the server
     Account             string      `json:"account"`
     Venue               string      `json:"venue"`
     Symbol              string      `json:"symbol"`
@@ -142,6 +142,22 @@ type RawOrder struct {
     Price               int         `json:"price"`
 }
 
+type ShortOrder struct {    // Like RawOrder, but missing everything we can get from TradingInfo
+    Direction           string      `json:"direction"`
+    OrderType           string      `json:"orderType"`
+    Qty                 int         `json:"qty"`
+    Price               int         `json:"price"`
+}
+
+type TradingInfo struct {
+    BaseURL             string      `json:"baseURL"`
+    WebSocketURL        string      `json:"websocketURL"`
+    ApiKey              string      `json:"apiKey"`
+    Account             string      `json:"account"`
+    Venue               string      `json:"venue"`
+    Symbol              string      `json:"symbol"`
+}
+
 type Position struct {
     Lock                sync.Mutex
     Account             string
@@ -149,4 +165,23 @@ type Position struct {
     Symbol              string
     Cents               int
     Shares              int
+}
+
+// The following methods and interface allow either a RawOrder or a ShortOrder to be passed to base.Execute()
+
+func (original RawOrder) MakeShortOrder() ShortOrder  {
+    return ShortOrder{
+        Direction: original.Direction,
+        OrderType: original.OrderType,
+        Qty: original.Qty,
+        Price: original.Price,
+    }
+}
+
+func (original ShortOrder) MakeShortOrder() ShortOrder  {
+    return original
+}
+
+type ShortOrderer interface {
+    MakeShortOrder() ShortOrder
 }
