@@ -67,10 +67,10 @@ func LoadGMfile(levelname string)  (Level, error) {
     var ret Level
 
     s, err := ioutil.ReadFile(filename)
-	if err != nil {
+    if err != nil {
         ret.Error = err.Error()
-		return ret, err
-	}
+        return ret, err
+    }
 
     err = json.Unmarshal(s, &ret)
     if err != nil {
@@ -78,7 +78,7 @@ func LoadGMfile(levelname string)  (Level, error) {
         return ret, err
     }
 
-	return ret, nil
+    return ret, nil
 }
 
 func SaveGMfile(levelname string, level Level)  {
@@ -133,7 +133,10 @@ func TradingInfoFromName(levelname string)  TradingInfo {
     // this function returns a TradingInfo struct, using sensible default
     // values for the URLs and API key.
 
-    level, _ := LoadGMfile(levelname)
+    level, err := LoadGMfile(levelname)
+    if err != nil {
+        fmt.Println(err)
+    }
     return TradingInfoFromLevel(level)
 }
 
@@ -141,9 +144,9 @@ func NameFromUser()  string {
     var known = make(map[string]string)
 
     s, err := ioutil.ReadFile("known_levels.json")
-	if err != nil {
+    if err != nil {
         fmt.Println(err)
-	}
+    }
 
     json.Unmarshal(s, &known)
     PrintJSON(known)
@@ -151,7 +154,7 @@ func NameFromUser()  string {
     fmt.Println("\nEnter level number...")
 
     scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
+    scanner.Scan()
 
     return known[scanner.Text()]
 }
