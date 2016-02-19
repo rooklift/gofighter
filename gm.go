@@ -19,7 +19,7 @@ type Level struct {
     Balances map[string]int `json:"balances,omitempty"`
     BaseURL string          `json:"baseURL,omitempty"`       // These ain't part of the
     WebSocketURL string     `json:"websocketURL,omitempty"`  // official response but might
-	ApiKey string           `json:"apiKey,omitempty"`        // be present in custom things
+    ApiKey string           `json:"apiKey,omitempty"`        // be present in custom things
 }
 
 const OFFICIAL_BASE_URL = "https://api.stockfighter.io/ob/api"
