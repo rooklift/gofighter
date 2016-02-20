@@ -3,11 +3,12 @@ package gofighter
 import (
 	"bytes"
 	"encoding/json"
+	"time"
 )
 
-func Ticker (ws_url string, account string, venue string, symbol string, results chan Quote) {
+func Ticker(info TradingInfo, results chan Quote) {
 
-	url := ws_url + "/" + account + "/venues/" + venue + "/tickertape"
+	url := info.WebSocketURL + "/" + info.Account + "/venues/" + info.Venue + "/tickertape"
 	conn := ws_connect_until_success(url)
 
 	for {
@@ -31,4 +32,18 @@ func Ticker (ws_url string, account string, venue string, symbol string, results
 			results <- q.Quote
 		}
 	}
+}
+
+func FakeTicker(info TradingInfo, results chan Quote)  {
+
+    // Poor man's tickertape without WebSockets...
+
+    for {
+        res, err := GetQuote(info)
+        if err != nil {
+            continue
+        }
+        results <- res
+        time.Sleep(500 * time.Millisecond)
+    }
 }

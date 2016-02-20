@@ -5,9 +5,9 @@ import (
     "encoding/json"
 )
 
-func Tracker(ws_url string, account string, venue string, symbol string, results chan Execution) {
+func Tracker(info TradingInfo, results chan Execution)  {
 
-    url := ws_url + "/" + account + "/venues/" + venue + "/executions"
+    url := info.WebSocketURL + "/" + info.Account + "/venues/" + info.Venue + "/executions"
     conn := ws_connect_until_success(url)
 
     for {
@@ -33,8 +33,7 @@ func Tracker(ws_url string, account string, venue string, symbol string, results
     }
 }
 
-func PositionUpdater(ws_url string, account string, venue string, symbol string,
-                     pos * Position, ws_results chan Execution, updated_pos_chan chan Position) {
+func PositionUpdater(info TradingInfo, pos * Position, ws_results chan Execution, updated_pos_chan chan Position)  {
 
     // The position updater does 3 things:
     //     * Updates the Position, which can optionally be in shared memory (otherwise, it creates one if the ptr is nil)
@@ -46,13 +45,13 @@ func PositionUpdater(ws_url string, account string, venue string, symbol string,
     }
 
     pos.Lock.Lock()
-    pos.Account = account
-    pos.Venue = venue
-    pos.Symbol = symbol
+    pos.Account = info.Account
+    pos.Venue = info.Venue
+    pos.Symbol = info.Symbol
     pos.Lock.Unlock()
 
     local_chan := make(chan Execution, 64)
-    go Tracker(ws_url, account, venue, symbol, local_chan)
+    go Tracker(info, local_chan)
 
     var updatedpos Position
 
