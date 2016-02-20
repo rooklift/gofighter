@@ -23,7 +23,7 @@ type Level struct {
 }
 
 const OFFICIAL_BASE_URL = "https://api.stockfighter.io/ob/api"
-const OFFICIAL_WS_URL = "https://api.stockfighter.io/ob/api/ws"
+const OFFICIAL_WS_URL = "wss://api.stockfighter.io/ob/api/ws"
 const OFFICIAL_GM_URL = "https://www.stockfighter.io/gm"
 
 const GM_DIRECTORY = "gm"
