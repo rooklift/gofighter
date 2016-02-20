@@ -167,6 +167,12 @@ type Position struct {
     Shares              int
 }
 
+type Movement struct {
+	Cents int
+	Shares int
+	LastPrice int
+}
+
 // The following methods and interface allow either a RawOrder or a ShortOrder to be passed to base.Execute()
 
 func (original RawOrder) MakeShortOrder() ShortOrder  {
