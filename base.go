@@ -62,9 +62,6 @@ func maybe_set_string_from_error(s * string, err error)  {
 	if err != nil {
 		if s != nil {
 			*s = err.Error()
-		} else {
-			s = new(string)
-			*s = err.Error()
 		}
 	}
 	return
