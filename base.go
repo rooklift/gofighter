@@ -60,7 +60,12 @@ func get_json_from_url(method string, url string, api_key string, postdata * Raw
 
 func maybe_set_string_from_error(s * string, err error)  {
 	if err != nil {
-		*s = err.Error()
+		if s != nil {
+			*s = err.Error()
+		} else {
+			s = new(string)
+			*s = err.Error()
+		}
 	}
 	return
 }
