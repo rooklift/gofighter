@@ -67,10 +67,10 @@ func PositionUpdater(ws_url string, account string, venue string, symbol string,
             pos.Shares -= msg.Filled
             pos.Cents += msg.Price * msg.Filled
         }
-        updatedpos = *pos				// Set this inside the lock but send it later (outside the lock), might help avoid deadlocks
+        updatedpos = *pos               // Set this inside the lock but send it later (outside the lock), might help avoid deadlocks
         pos.Lock.Unlock()
 
-        if ws_results != nil {			// Optionally pass on the raw WS msg from Tracker
+        if ws_results != nil {          // Optionally pass on the raw WS msg from Tracker
             ws_results <- msg
         }
 
