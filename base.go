@@ -129,12 +129,19 @@ func GetStatus(info TradingInfo, id int)  (Order, error) {
     return ret, err
 }
 
-func Cancel(info TradingInfo, id int)  (Order, error) {
+func CancelChanneled(info TradingInfo, id int, result_chan chan Order)  (Order, error) {
     var ret Order
     url := info.BaseURL + "/venues/" + info.Venue + "/stocks/" + info.Symbol + "/orders/" + strconv.Itoa(id)
     err := get_json_from_url("DELETE", url, info.ApiKey, nil, &ret)
     maybe_set_string_from_error(&ret.Error, err)
+    if result_chan != nil {
+        result_chan <- ret
+    }
     return ret, err
+}
+
+func Cancel(info TradingInfo, id int)  (Order, error) {
+    return CancelChanneled(info, id, nil)
 }
 
 func StatusAllOrders(info TradingInfo)  (OrderList, error) {
