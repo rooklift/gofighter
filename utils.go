@@ -51,7 +51,6 @@ func MoveFromOrder (order Order)  Movement {
 			} else {
 				m.Cents -= fill.Qty * fill.Price
 			}
-			m.LastPrice = fill.Price
 		}
 	}
 
