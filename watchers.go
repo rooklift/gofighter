@@ -94,6 +94,12 @@ func MarketWatch(info TradingInfo, queries chan chan Market)  {
 	}
 }
 
+func GetMarket(query_channel chan chan Market)  Market {
+	response_chan := make(chan Market)
+	query_channel <- response_chan
+	market := <- response_chan
+	return market
+}
 
 func PositionWatch(info TradingInfo, queries chan chan Position)  {
 
@@ -121,4 +127,11 @@ func PositionWatch(info TradingInfo, queries chan chan Position)  {
         }
     }
     return
+}
+
+func GetPosition(query_channel chan chan Position)  Position {
+    response_chan := make(chan Position)
+    query_channel <- response_chan
+    position := <- response_chan
+    return position
 }
