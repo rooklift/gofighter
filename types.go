@@ -1,5 +1,9 @@
 package gofighter
 
+import (
+    "sync"
+)
+
 type Quote struct {
     // Use pointers so missing values are nil after marshalling
     // (this is very important for the quote). This also means
@@ -165,6 +169,12 @@ type Position struct {
     Cents               int
     Shares              int
     Tracker             chan Execution
+}
+
+type SimplePosition struct {
+    Lock    sync.Mutex
+    Shares  int
+    Cents   int
 }
 
 type Market struct {
