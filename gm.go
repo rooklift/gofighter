@@ -151,7 +151,7 @@ func NameFromUser()  string {
     json.Unmarshal(s, &known)
     PrintJSON(known)
 
-    fmt.Println("\nEnter level number...")
+    fmt.Println("\nEnter level number... (run game_start.exe first)")
 
     scanner := bufio.NewScanner(os.Stdin)
     scanner.Scan()
