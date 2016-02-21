@@ -129,8 +129,8 @@ type OrderList struct {
     Orders              []Order     `json:"orders"`
 }
 
-// The following things are created purely client-side
-// (not marshalled from the server)...
+// The following things are created purely or mostly client-side
+// (not marshalled directly from the server)...
 
 type RawOrder struct {      // This is what actually gets marshalled and sent to the server
     Account             string      `json:"account"`
@@ -171,6 +171,16 @@ type Movement struct {
 	Cents int
 	Shares int
 	LastPrice int
+}
+
+type Market struct {
+    Info            TradingInfo
+    RecentPrices    []int
+    LastTime        string
+    LastPrice       int
+    Bid             int
+    Ask             int
+    Ticker          chan Quote
 }
 
 // The following methods and interface allow either a RawOrder or a ShortOrder to be passed to base.Execute()
