@@ -156,7 +156,7 @@ func (m * Market) Print()  {
         arrow = "<----------->"
     }
 
-    fmt.Printf("%5s %s %5s    Recent: %5d (n == %3d) | %-5d (no outliers)\n",
+    fmt.Printf("%5s %s %5s ... averages: %5d (n == %3d) |> %-5d\n",
                bidstr, arrow, askstr, m.Average(), len(m.RecentPrices), m.AverageSansOutliers())
     return
 }
