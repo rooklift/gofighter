@@ -18,9 +18,12 @@ func (m * Market) Init(info TradingInfo, tickerfunction func(TradingInfo, chan Q
 
 func (m * Market) Update()  int {
 
-    // Update the market from the WebSocket results channel.
-    // Assumes m.Init() has been called (once ever).
-    // Return the number of WebSocket messages read.
+    // Update from WebSocket messages -- via channel set up by .Init() -- and return the number of messages read.
+
+    if m.Ticker == nil {
+        fmt.Println("WARNING: Attempt to use Market.Update() but channel was nil -- maybe Init() was never called?")
+        return 0
+    }
 
     var count int
 

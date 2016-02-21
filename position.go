@@ -11,6 +11,11 @@ func (p * Position) Init(info TradingInfo)  {
 
 func (p * Position) Update()  {
 
+    if p.Tracker == nil {
+        fmt.Println("WARNING: Attempt to use Position.Update() but channel was nil -- maybe Init() was never called?")
+        return
+    }
+
     loop:
     for {
         select {
@@ -29,6 +34,7 @@ func (p * Position) Update()  {
             break loop
         }
     }
+    return
 }
 
 func (p * Position) Print(currentprice int)  {
@@ -38,4 +44,9 @@ func (p * Position) Print(currentprice int)  {
     } else {
         fmt.Printf("Shares: %d, Dollars: $%d, NAV: N/A\n", p.Shares, p.Cents / 100)
     }
+}
+
+func (p * Position) UpdateFromMovement(move Movement)  {
+    p.Cents += move.Cents
+    p.Shares += move.Shares
 }
