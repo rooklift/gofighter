@@ -1,9 +1,5 @@
 package gofighter
 
-import (
-    "sync"
-)
-
 type Quote struct {
     // Use pointers so missing values are nil after marshalling
     // (this is very important for the quote). This also means
@@ -158,29 +154,27 @@ type TradingInfo struct {
     Symbol              string      `json:"symbol"`
 }
 
-type Position struct {
-    Lock                sync.Mutex
-    Account             string
-    Venue               string
-    Symbol              string
-    Cents               int
-    Shares              int
-}
-
 type Movement struct {
 	Cents int
 	Shares int
 	LastPrice int
 }
 
+type Position struct {
+    Info                TradingInfo
+    Cents               int
+    Shares              int
+    Tracker             chan Execution
+}
+
 type Market struct {
-    Info            TradingInfo
-    RecentPrices    []int
-    LastTime        string
-    LastPrice       int
-    Bid             int
-    Ask             int
-    Ticker          chan Quote
+    Info                TradingInfo
+    RecentPrices        []int
+    LastTime            string
+    LastPrice           int
+    Bid                 int
+    Ask                 int
+    Ticker              chan Quote
 }
 
 // The following methods and interface allow either a RawOrder or a ShortOrder to be passed to base.Execute()

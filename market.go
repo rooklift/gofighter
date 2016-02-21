@@ -7,7 +7,7 @@ import (
 const MARKET_PRICES_STORED = 200
 
 func (m * Market) Init(info TradingInfo, tickerfunction func(TradingInfo, chan Quote))  {
-    m.Ticker = make(chan Quote, 256)
+    m.Ticker = make(chan Quote, 8192)           // Probably more than is needed
     go tickerfunction(info, m.Ticker)
 
     m.Info = info
