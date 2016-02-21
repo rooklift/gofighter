@@ -37,6 +37,10 @@ func (m * Market) Update()  int {
 
                 saw_new_price := false
 
+                // We store most of the quote in the Market info. Why not just store a quote? Well,
+                // the quote has pointers which might be nil. Saving things as an int, with -1 as
+                // a special "not present" value, makes life more convenient in the end. I hope.
+
                 if q.Bid != nil {
                     m.Bid = *q.Bid
                 } else {
@@ -59,6 +63,18 @@ func (m * Market) Update()  int {
                     m.AskSize = *q.AskSize
                 } else {
                     m.AskSize = -1
+                }
+
+                if q.BidDepth != nil {
+                    m.BidDepth = *q.BidDepth
+                } else {
+                    m.BidDepth = -1
+                }
+
+                if q.AskDepth != nil {
+                    m.AskDepth = *q.AskDepth
+                } else {
+                    m.AskDepth = -1
                 }
 
                 if q.Last != nil {

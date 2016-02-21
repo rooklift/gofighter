@@ -188,6 +188,8 @@ type Market struct {
     Ask                 int
     BidSize             int
     AskSize             int
+    BidDepth            int
+    AskDepth            int
     Ticker              chan Quote
 }
 
