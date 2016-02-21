@@ -159,9 +159,9 @@ type TradingInfo struct {
 }
 
 type Movement struct {
-	Cents int
-	Shares int
-	LastPrice int
+    Cents               int
+    Shares              int
+    LastPrice           int
 }
 
 type Position struct {
