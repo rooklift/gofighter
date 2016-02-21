@@ -172,9 +172,9 @@ type Position struct {
 }
 
 type SimplePosition struct {
-    Lock    sync.Mutex
-    Shares  int
-    Cents   int
+    Lock                sync.Mutex
+    Shares              int
+    Cents               int
 }
 
 type Market struct {
