@@ -49,6 +49,18 @@ func (m * Market) Update()  int {
                     m.Ask = -1
                 }
 
+                if q.BidSize != nil {
+                    m.BidSize = *q.BidSize
+                } else {
+                    m.BidSize = -1
+                }
+
+                if q.AskSize != nil {
+                    m.AskSize = *q.AskSize
+                } else {
+                    m.AskSize = -1
+                }
+
                 if q.Last != nil {
                     if m.LastPrice != *q.Last {
                         saw_new_price = true

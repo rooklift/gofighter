@@ -164,6 +164,7 @@ type Movement struct {
 }
 
 type Position struct {
+    // Client updates this by calling Update() method
     Info                TradingInfo
     Cents               int
     Shares              int
@@ -171,9 +172,11 @@ type Position struct {
 }
 
 type SimplePosition struct {
-    Lock                sync.Mutex
-    Shares              int
+    // Client updates this itself
+    Info                TradingInfo
     Cents               int
+    Shares              int
+    Lock                sync.Mutex
 }
 
 type Market struct {
@@ -183,6 +186,8 @@ type Market struct {
     LastPrice           int
     Bid                 int
     Ask                 int
+    BidSize             int
+    AskSize             int
     Ticker              chan Quote
 }
 
