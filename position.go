@@ -9,6 +9,8 @@ import (
 func (p * Position) Init(info TradingInfo)  {
     p.Tracker = make(chan Execution, 8192)          // Probably more than is needed
     go Tracker(info, p.Tracker)
+
+    p.Info = info
 }
 
 func (p * Position) Update()  {
@@ -50,6 +52,10 @@ func (p * Position) Print(currentprice int)  {
 
 // The SimplePosition type assumes it will be updated via reading cancels.
 // It is the caller's responsibility to lock it if concurrency is happening.
+
+func (p * SimplePosition) Init(info TradingInfo)  {
+    p.Info = info
+}
 
 func (p * SimplePosition) UpdateFromMovement(move Movement)  {
     p.Cents += move.Cents
