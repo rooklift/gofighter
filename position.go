@@ -1,5 +1,9 @@
 package gofighter
 
+import (
+    "fmt"
+)
+
 func (p * Position) Init(info TradingInfo)  {
     p.Tracker = make(chan Execution, 8192)          // Probably more than is needed
     go Tracker(info, p.Tracker)
@@ -24,5 +28,14 @@ func (p * Position) Update()  {
         default:
             break loop
         }
+    }
+}
+
+func (p * Position) Print(currentprice int)  {
+    if currentprice > 0 {
+        nav := p.Cents + (p.Shares * currentprice)
+        fmt.Printf("Shares: %d, Dollars: $%d, NAV: $%d\n", p.Shares, p.Cents / 100, nav / 100)
+    } else {
+        fmt.Printf("Shares: %d, Dollars: $%d, NAV: N/A\n", p.Shares, p.Cents / 100)
     }
 }
