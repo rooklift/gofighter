@@ -11,17 +11,17 @@ package gofighter
 
 func PositionWatch(info TradingInfo, queries chan chan Position)  {
 
-	p := Position{}
+    p := Position{}
 
-	tracker_channel := make(chan Execution, 256)	// Surely this is more than needed
-	go Tracker(info, tracker_channel)
+    tracker_channel := make(chan Execution, 256)    // Surely this is more than needed
+    go Tracker(info, tracker_channel)
 
     for {
         select {
 
-		case c := <- queries:
+        case c := <- queries:
 
-			c <- p
+            c <- p
 
         case msg := <- tracker_channel:
 
