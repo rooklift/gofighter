@@ -164,15 +164,6 @@ type Movement struct {
 }
 
 type Position struct {
-    // Client updates this by calling Update() method
-    Info                TradingInfo
-    Cents               int
-    Shares              int
-    Tracker             chan Execution
-}
-
-type SimplePosition struct {
-    // Client updates this itself
     Info                TradingInfo
     Cents               int
     Shares              int
@@ -190,7 +181,7 @@ type Market struct {
     AskSize             int
     BidDepth            int
     AskDepth            int
-    Ticker              chan Quote
+    Lock                sync.Mutex
 }
 
 // The following methods and interface allow either a RawOrder or a ShortOrder to be passed to base.Execute()
