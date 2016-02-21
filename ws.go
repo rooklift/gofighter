@@ -48,7 +48,7 @@ func Tracker(info TradingInfo, results chan Execution)  {
             buf.ReadFrom(reader)
             b := buf.Bytes()
             err = json.Unmarshal(b, &e)
-            if err != nil {
+            if err != nil || e.Ok == false {
                 continue
             }
             results <- e
@@ -76,7 +76,7 @@ func Ticker(info TradingInfo, results chan Quote) {
 			buf.ReadFrom(reader)
 			b := buf.Bytes()
 			err = json.Unmarshal(b, &q)
-			if err != nil {
+			if err != nil || q.Ok == false {		// Note that q is the TickerQuote wrapper and q.Ok is not a pointer
 				continue
 			}
 			results <- q.Quote
