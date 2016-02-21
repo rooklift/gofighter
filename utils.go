@@ -14,7 +14,7 @@ func LoadAPIKey(filename string)  (string, error) {
 	return string(s), nil
 }
 
-func MakeJSON (i interface{})  (string, error) {
+func MakeJSON(i interface{})  (string, error) {
 	json_bytes, err := json.MarshalIndent(i, "", "  ")
 	if err != nil {
 		return "", err
@@ -23,7 +23,7 @@ func MakeJSON (i interface{})  (string, error) {
 	return json_str, nil
 }
 
-func PrintJSON (i interface{})  {
+func PrintJSON(i interface{})  {
 	s, err := MakeJSON(i)
 	if err != nil {
 		return
@@ -32,7 +32,7 @@ func PrintJSON (i interface{})  {
 	return
 }
 
-func MoveFromOrder (order Order)  Movement {
+func MoveFromOrder(order Order)  Movement {
 
 	// Assuming the order is closed, this returns the total
 	// change in cents and shares caused by it...

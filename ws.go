@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-func ws_connect_until_success (url string) (*websocket.Conn) {
+func ws_connect_until_success(url string)  (*websocket.Conn) {
 
 	var dialer websocket.Dialer
 	var header http.Header
@@ -56,7 +56,7 @@ func Tracker(info TradingInfo, results chan Execution)  {
     }
 }
 
-func Ticker(info TradingInfo, results chan Quote) {
+func Ticker(info TradingInfo, results chan Quote)  {
 
 	url := info.WebSocketURL + "/" + info.Account + "/venues/" + info.Venue + "/tickertape"
 	conn := ws_connect_until_success(url)
