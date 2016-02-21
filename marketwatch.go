@@ -1,7 +1,8 @@
 package gofighter
 
-// The watchers are alternate, probably better ways of watching a market or position, completely thread safe.
-// Call them as a new goroutine once and send a query via a channel when you want the info...
+// The watchers are the recommended way to use WebSockets to watch a market
+// or position, completely thread-safe. Call them as a new goroutine once and
+// send a query via a channel when you want the info...
 
 const MARKET_PRICES_STORED = 200
 
