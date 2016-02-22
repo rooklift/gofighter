@@ -12,6 +12,7 @@ package gofighter
 func PositionWatch(info TradingInfo, queries chan chan Position)  {
 
     p := Position{}
+    p.Info = info
 
     tracker_channel := make(chan Execution, 256)    // Surely this is more than needed
     go Tracker(info, tracker_channel)
