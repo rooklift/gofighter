@@ -19,10 +19,11 @@ func ws_connect_until_success(url string)  (*websocket.Conn) {
 
 	for {
 		conn, _, err = dialer.Dial(url, header)
-		if err == nil {
-			break
+		if err != nil {
+			time.Sleep(2 * time.Second)
+			continue
 		}
-		time.Sleep(2 * time.Second)
+		break
 	}
 
 	return conn
