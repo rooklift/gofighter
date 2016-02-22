@@ -48,25 +48,25 @@ func MarketWatch(info TradingInfo, queries chan chan Market)  {
             if q.BidSize != nil {
                 m.BidSize = *q.BidSize
             } else {
-                m.BidSize = -1
+                m.BidSize = 0
             }
 
             if q.AskSize != nil {
                 m.AskSize = *q.AskSize
             } else {
-                m.AskSize = -1
+                m.AskSize = 0
             }
 
             if q.BidDepth != nil {
                 m.BidDepth = *q.BidDepth
             } else {
-                m.BidDepth = -1
+                m.BidDepth = 0
             }
 
             if q.AskDepth != nil {
                 m.AskDepth = *q.AskDepth
             } else {
-                m.AskDepth = -1
+                m.AskDepth = 0
             }
 
             if q.Last != nil {
