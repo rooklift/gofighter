@@ -7,14 +7,21 @@ import (
     "io/ioutil"
     "net/http"
     "strconv"
+    "time"
 )
+
+// "Clients and Transports are safe for concurrent use by multiple
+// goroutines and for efficiency should only be created once and re-used."
+
+var client * http.Client = &http.Client{
+    Timeout: 10 * time.Second,
+}
 
 func get_json_from_url(method string, url string, api_key string, postdata * RawOrder, unmarshaltarget interface{})  error {
 
     bodybytes, _ := json.Marshal(postdata)                // Don't dereference postdata as it might be nil
     body := bytes.NewBufferString(string(bodybytes))
 
-    client := &http.Client{}
     req, err := http.NewRequest(method, url, body)
     if err != nil {
         return fmt.Errorf("local error calling http.NewRequest: %s", err)
