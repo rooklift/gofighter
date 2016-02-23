@@ -98,6 +98,7 @@ func FakeTicker(info TradingInfo, results chan Quote)  {
     for {
         res, err := GetQuote(info)
         if err != nil {
+            time.Sleep(500 * time.Millisecond)
             continue
         }
         results <- res
