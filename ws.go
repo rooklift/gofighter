@@ -80,8 +80,13 @@ func Ticker(info TradingInfo, results chan Quote)  {
             if err != nil || q.Ok == false {        // Note that q is the TickerQuote wrapper and q.Ok is not a pointer
                 continue
             }
-            results <- q.RawQuote.Quote()           // Convert the full-of-pointers struct to a normal Quote
-                                                    // (it might lack the Ok field though, server don't send that)
+
+            r := q.RawQuote.Quote()                 // Convert the full-of-pointers struct to a normal Quote
+            if r.Error == "" {                      // (it might lack the Ok field though, server don't send that)
+                r.Ok = true
+            }
+
+            results <- r
         }
     }
 }
