@@ -211,44 +211,44 @@ type Quote struct {
 
 // Method to get the second type from the first...
 
-func (q RawQuote) Quote()  Quote {
+func (r RawQuote) Quote()  Quote {
 
-    s := Quote{}
+    q := Quote{}
 
-    if q.Ok         != nil { s.Ok           = *q.Ok         }
-    if q.Error      != nil { s.Error        = *q.Error      }
-    if q.Venue      != nil { s.Venue        = *q.Venue      }
-    if q.Symbol     != nil { s.Symbol       = *q.Symbol     }
-    if q.BidSize    != nil { s.BidSize      = *q.BidSize    }
-    if q.AskSize    != nil { s.AskSize      = *q.AskSize    }
-    if q.BidDepth   != nil { s.BidDepth     = *q.BidDepth   }
-    if q.AskDepth   != nil { s.AskDepth     = *q.AskDepth   }
-    if q.LastSize   != nil { s.LastSize     = *q.LastSize   }
-    if q.LastTrade  != nil { s.LastTrade    = *q.LastTrade  }
-    if q.QuoteTime  != nil { s.QuoteTime    = *q.QuoteTime  }
+    if r.Ok         != nil { q.Ok           = *r.Ok         }
+    if r.Error      != nil { q.Error        = *r.Error      }
+    if r.Venue      != nil { q.Venue        = *r.Venue      }
+    if r.Symbol     != nil { q.Symbol       = *r.Symbol     }
+    if r.BidSize    != nil { q.BidSize      = *r.BidSize    }
+    if r.AskSize    != nil { q.AskSize      = *r.AskSize    }
+    if r.BidDepth   != nil { q.BidDepth     = *r.BidDepth   }
+    if r.AskDepth   != nil { q.AskDepth     = *r.AskDepth   }
+    if r.LastSize   != nil { q.LastSize     = *r.LastSize   }
+    if r.LastTrade  != nil { q.LastTrade    = *r.LastTrade  }
+    if r.QuoteTime  != nil { q.QuoteTime    = *r.QuoteTime  }
 
     // If they are nil, zero values for the above are acceptable.
     // But we must distinguish between 0-price and no-price:
 
-    if q.Bid != nil {
-        s.Bid = *q.Bid
+    if r.Bid != nil {
+        q.Bid = *r.Bid
     } else {
-        s.Bid = -1
+        q.Bid = -1
     }
 
-    if q.Ask != nil {
-        s.Ask = *q.Ask
+    if r.Ask != nil {
+        q.Ask = *r.Ask
     } else {
-        s.Ask = -1
+        q.Ask = -1
     }
 
-    if q.Last != nil {
-        s.Last = *q.Last
+    if r.Last != nil {
+        q.Last = *r.Last
     } else {
-        s.Last = -1
+        q.Last = -1
     }
 
-    return s
+    return q
 }
 
 // The Ticker WebSocket sends the following thing for some reason:
