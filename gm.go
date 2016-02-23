@@ -140,10 +140,10 @@ func TradingInfoFromName(levelname string)  TradingInfo {
     return TradingInfoFromLevel(level)
 }
 
-func NameFromUser()  string {
+func NameFromUser(levelnamefile string)  string {
     var known = make(map[string]string)
 
-    s, err := ioutil.ReadFile("known_levels.json")
+    s, err := ioutil.ReadFile(levelnamefile)
     if err != nil {
         fmt.Println(err)
     }
@@ -157,4 +157,10 @@ func NameFromUser()  string {
     scanner.Scan()
 
     return known[scanner.Text()]
+}
+
+func GetUserSelection(levelnamefile string)  TradingInfo {
+    levelname := NameFromUser(levelnamefile)
+    info := TradingInfoFromName(levelname)
+    return info
 }
