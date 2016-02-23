@@ -117,13 +117,10 @@ func GetOrderbook(info TradingInfo)  (OrderBook, error) {
     return ret, err
 }
 
-func GetQuote(info TradingInfo)  (Quote, error) {
-    var raw RawQuote
+func GetQuote(info TradingInfo)  (Quote, error) {       // Note that Quote has its own unmarshaller
+    var ret Quote
     url := info.BaseURL + "/venues/" + info.Venue + "/stocks/" + info.Symbol + "/quote"
-    err := get_json_from_url("GET", url, info.ApiKey, nil, &raw)
-
-    ret := raw.Quote()      // Convert the full-of-pointers struct to a normal Quote
-
+    err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
     maybe_set_string_from_error(&ret.Error, err)
     return ret, err
 }

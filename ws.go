@@ -77,16 +77,15 @@ func Ticker(info TradingInfo, results chan Quote)  {
             buf.ReadFrom(reader)
             b := buf.Bytes()
             err = json.Unmarshal(b, &q)
-            if err != nil || q.Ok == false {        // Note that q is the TickerQuote wrapper and q.Ok is not a pointer
+            if err != nil || q.Ok == false {    // Note that this q.Ok is on the outer TickerQuote type, not the nested quote
                 continue
             }
 
-            r := q.RawQuote.Quote()                 // Convert the full-of-pointers struct to a normal Quote
-            if r.Error == "" {                      // (it might lack the Ok field though, server don't send that)
-                r.Ok = true
+            if q.Quote.Error == "" {            // Official server doesn't send "ok" field in the nested quote
+                q.Quote.Ok = true
             }
 
-            results <- r
+            results <- q.Quote
         }
     }
 }

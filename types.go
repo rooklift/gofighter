@@ -1,6 +1,7 @@
 package gofighter
 
 import (
+    "encoding/json"
     "sync"
 )
 
@@ -168,28 +169,7 @@ type ShortOrderer interface {
     MakeShortOrder() ShortOrder
 }
 
-// We unmarshal quotes into pointers so we can tell the difference
-// between field-not-present and actually-zero values.
-
-type RawQuote struct {
-    Ok                  *bool       `json:"ok"`
-    Error               *string     `json:"error,omitempty"`                // Usually absent
-    Venue               *string     `json:"venue"`
-    Symbol              *string     `json:"symbol"`
-    Bid                 *int        `json:"bid,omitempty"`                  // Can be absent
-    Ask                 *int        `json:"ask,omitempty"`                  // Can be absent
-    BidSize             *int        `json:"bidSize"`
-    AskSize             *int        `json:"askSize"`
-    BidDepth            *int        `json:"bidDepth"`
-    AskDepth            *int        `json:"askDepth"`
-    Last                *int        `json:"last,omitempty"`                 // Can be absent
-    LastSize            *int        `json:"lastSize,omitempty"`             // Can be absent
-    LastTrade           *string     `json:"lastTrade,omitempty"`            // Can be absent
-    QuoteTime           *string     `json:"quoteTime"`
-}
-
-// But we need some struct to hold values we can easily manipulate
-// without worrying about nil-pointer errors:
+// Quotes are special due to the possibility of important fields being absent...
 
 type Quote struct {
 
@@ -209,11 +189,30 @@ type Quote struct {
     QuoteTime           string      `json:"quoteTime"`
 }
 
-// Method to get the second type from the first...
+func (q * Quote) UnmarshalJSON(b []byte)  error {
 
-func (r RawQuote) Quote()  Quote {
+    // We unmarshal quotes into pointers so we can tell the difference
+    // between field-not-present and actually-zero values.
 
-    q := Quote{}
+    type RawQuote struct {
+        Ok                  *bool       `json:"ok"`
+        Error               *string     `json:"error"`
+        Venue               *string     `json:"venue"`
+        Symbol              *string     `json:"symbol"`
+        Bid                 *int        `json:"bid"`                // Can be absent
+        Ask                 *int        `json:"ask"`                // Can be absent
+        BidSize             *int        `json:"bidSize"`
+        AskSize             *int        `json:"askSize"`
+        BidDepth            *int        `json:"bidDepth"`
+        AskDepth            *int        `json:"askDepth"`
+        Last                *int        `json:"last"`               // Can be absent
+        LastSize            *int        `json:"lastSize"`           // Can be absent
+        LastTrade           *string     `json:"lastTrade"`          // Can be absent
+        QuoteTime           *string     `json:"quoteTime"`
+    }
+
+    r := RawQuote{}
+    err := json.Unmarshal(b, &r)
 
     if r.Ok         != nil { q.Ok           = *r.Ok         }
     if r.Error      != nil { q.Error        = *r.Error      }
@@ -248,7 +247,7 @@ func (r RawQuote) Quote()  Quote {
         q.Last = -1
     }
 
-    return q
+    return err
 }
 
 // The Ticker WebSocket sends the following thing for some reason:
@@ -256,5 +255,5 @@ func (r RawQuote) Quote()  Quote {
 type TickerQuote struct {
     Ok                  bool        `json:"ok"`
     Error               string      `json:"error,omitempty"`
-    RawQuote            RawQuote    `json:"quote"`
+    Quote               Quote       `json:"quote"`
 }
