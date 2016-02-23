@@ -176,13 +176,13 @@ type RawQuote struct {
     Error               *string     `json:"error,omitempty"`                // Usually absent
     Venue               *string     `json:"venue"`
     Symbol              *string     `json:"symbol"`
-    Bid                 *int        `json:"bid,omitempty"`                  // Can be absent, still prints if 0
-    Ask                 *int        `json:"ask,omitempty"`                  // Can be absent, still prints if 0
+    Bid                 *int        `json:"bid,omitempty"`                  // Can be absent
+    Ask                 *int        `json:"ask,omitempty"`                  // Can be absent
     BidSize             *int        `json:"bidSize"`
     AskSize             *int        `json:"askSize"`
     BidDepth            *int        `json:"bidDepth"`
     AskDepth            *int        `json:"askDepth"`
-    Last                *int        `json:"last,omitempty"`                 // Can be absent, still prints if 0
+    Last                *int        `json:"last,omitempty"`                 // Can be absent
     LastSize            *int        `json:"lastSize,omitempty"`             // Can be absent
     LastTrade           *string     `json:"lastTrade,omitempty"`            // Can be absent
     QuoteTime           *string     `json:"quoteTime"`
@@ -197,13 +197,13 @@ type Quote struct {
     Error               string      `json:"error,omitempty"`
     Venue               string      `json:"venue"`
     Symbol              string      `json:"symbol"`
-    Bid                 int         `json:"bid,omitempty"`
-    Ask                 int         `json:"ask,omitempty"`
+    Bid                 int         `json:"bid,omitempty"`                  // Gets set to -1 if absent
+    Ask                 int         `json:"ask,omitempty"`                  // Gets set to -1 if absent
     BidSize             int         `json:"bidSize"`
     AskSize             int         `json:"askSize"`
     BidDepth            int         `json:"bidDepth"`
     AskDepth            int         `json:"askDepth"`
-    Last                int         `json:"last,omitempty"`
+    Last                int         `json:"last,omitempty"`                 // Gets set to -1 if absent
     LastSize            int         `json:"lastSize,omitempty"`
     LastTrade           string      `json:"lastTrade,omitempty"`
     QuoteTime           string      `json:"quoteTime"`
