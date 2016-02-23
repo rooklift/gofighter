@@ -4,34 +4,6 @@ import (
     "sync"
 )
 
-type Quote struct {
-    // Use pointers so missing values are nil after marshalling
-    // (this is very important for the quote). This also means
-    // that the JSON printer can skip nil fields if the omitempty
-    // tag is given. It WILL still print the field if it's a valid
-    // pointer to a zero value -- i.e. (int) 0 or (string) ""
-    Ok                  *bool       `json:"ok"`
-    Error               *string     `json:"error,omitempty"`                // Usually absent
-    Venue               *string     `json:"venue"`
-    Symbol              *string     `json:"symbol"`
-    Bid                 *int        `json:"bid,omitempty"`                  // Can be absent, still prints if 0
-    Ask                 *int        `json:"ask,omitempty"`                  // Can be absent, still prints if 0
-    BidSize             *int        `json:"bidSize"`
-    AskSize             *int        `json:"askSize"`
-    BidDepth            *int        `json:"bidDepth"`
-    AskDepth            *int        `json:"askDepth"`
-    Last                *int        `json:"last,omitempty"`                 // Can be absent, still prints if 0
-    LastSize            *int        `json:"lastSize,omitempty"`             // Can be absent
-    LastTrade           *string     `json:"lastTrade,omitempty"`            // Can be absent
-    QuoteTime           *string     `json:"quoteTime"`
-}
-
-type TickerQuote struct {
-    Ok                  bool        `json:"ok"`
-    Error               string      `json:"error,omitempty"`
-    Quote               Quote       `json:"quote"`
-}
-
 type Execution struct {
     Ok                  bool        `json:"ok"`
     Error               string      `json:"error,omitempty"`
@@ -173,14 +145,7 @@ type Position struct {
 type Market struct {
     Info                TradingInfo
     RecentPrices        []int
-    LastTime            string
-    LastPrice           int
-    Bid                 int
-    Ask                 int
-    BidSize             int
-    AskSize             int
-    BidDepth            int
-    AskDepth            int
+    Quote               Quote
     Lock                sync.Mutex
 }
 
@@ -201,4 +166,95 @@ func (original ShortOrder) MakeShortOrder() ShortOrder  {
 
 type ShortOrderer interface {
     MakeShortOrder() ShortOrder
+}
+
+// We unmarshal quotes into pointers so we can tell the difference
+// between field-not-present and actually-zero values.
+
+type RawQuote struct {
+    Ok                  *bool       `json:"ok"`
+    Error               *string     `json:"error,omitempty"`                // Usually absent
+    Venue               *string     `json:"venue"`
+    Symbol              *string     `json:"symbol"`
+    Bid                 *int        `json:"bid,omitempty"`                  // Can be absent, still prints if 0
+    Ask                 *int        `json:"ask,omitempty"`                  // Can be absent, still prints if 0
+    BidSize             *int        `json:"bidSize"`
+    AskSize             *int        `json:"askSize"`
+    BidDepth            *int        `json:"bidDepth"`
+    AskDepth            *int        `json:"askDepth"`
+    Last                *int        `json:"last,omitempty"`                 // Can be absent, still prints if 0
+    LastSize            *int        `json:"lastSize,omitempty"`             // Can be absent
+    LastTrade           *string     `json:"lastTrade,omitempty"`            // Can be absent
+    QuoteTime           *string     `json:"quoteTime"`
+}
+
+// But we need some struct to hold values we can easily manipulate
+// without worrying about nil-pointer errors:
+
+type Quote struct {
+
+    Ok                  bool        `json:"ok"`
+    Error               string      `json:"error,omitempty"`
+    Venue               string      `json:"venue"`
+    Symbol              string      `json:"symbol"`
+    Bid                 int         `json:"bid,omitempty"`
+    Ask                 int         `json:"ask,omitempty"`
+    BidSize             int         `json:"bidSize"`
+    AskSize             int         `json:"askSize"`
+    BidDepth            int         `json:"bidDepth"`
+    AskDepth            int         `json:"askDepth"`
+    Last                int         `json:"last,omitempty"`
+    LastSize            int         `json:"lastSize,omitempty"`
+    LastTrade           string      `json:"lastTrade,omitempty"`
+    QuoteTime           string      `json:"quoteTime"`
+}
+
+// Method to get the second type from the first...
+
+func (q RawQuote) Quote()  Quote {
+
+    s := Quote{}
+
+    if q.Ok         != nil { s.Ok           = *q.Ok         }
+    if q.Error      != nil { s.Error        = *q.Error      }
+    if q.Venue      != nil { s.Venue        = *q.Venue      }
+    if q.Symbol     != nil { s.Symbol       = *q.Symbol     }
+    if q.BidSize    != nil { s.BidSize      = *q.BidSize    }
+    if q.AskSize    != nil { s.AskSize      = *q.AskSize    }
+    if q.BidDepth   != nil { s.BidDepth     = *q.BidDepth   }
+    if q.AskDepth   != nil { s.AskDepth     = *q.AskDepth   }
+    if q.LastSize   != nil { s.LastSize     = *q.LastSize   }
+    if q.LastTrade  != nil { s.LastTrade    = *q.LastTrade  }
+    if q.QuoteTime  != nil { s.QuoteTime    = *q.QuoteTime  }
+
+    // If they are nil, zero values for the above are acceptable.
+    // But we must distinguish between 0-price and no-price:
+
+    if q.Bid != nil {
+        s.Bid = *q.Bid
+    } else {
+        s.Bid = -1
+    }
+
+    if q.Ask != nil {
+        s.Ask = *q.Ask
+    } else {
+        s.Ask = -1
+    }
+
+    if q.Last != nil {
+        s.Last = *q.Last
+    } else {
+        s.Last = -1
+    }
+
+    return s
+}
+
+// The Ticker WebSocket sends the following thing for some reason:
+
+type TickerQuote struct {
+    Ok                  bool        `json:"ok"`
+    Error               string      `json:"error,omitempty"`
+    RawQuote            RawQuote    `json:"quote"`
 }

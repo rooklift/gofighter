@@ -118,13 +118,13 @@ func GetOrderbook(info TradingInfo)  (OrderBook, error) {
 }
 
 func GetQuote(info TradingInfo)  (Quote, error) {
-    var ret Quote
+    var raw RawQuote
     url := info.BaseURL + "/venues/" + info.Venue + "/stocks/" + info.Symbol + "/quote"
-    err := get_json_from_url("GET", url, info.ApiKey, nil, &ret)
-    if err != nil {
-        ret.Error = new(string)     // This is the only API call where the result is unmarshaled
-        *ret.Error = err.Error()    // into a struct with pointers, so we have to do this here
-    }
+    err := get_json_from_url("GET", url, info.ApiKey, nil, &raw)
+
+    ret := raw.Quote()      // Convert the full-of-pointers struct to a normal Quote
+
+    maybe_set_string_from_error(&ret.Error, err)
     return ret, err
 }
 

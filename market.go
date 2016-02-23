@@ -47,28 +47,28 @@ func (m * Market) AverageSansOutliers()  int {
 }
 
 func (m * Market) Spread()  int {
-    if m.Bid == -1 || m.Ask == -1 {
+    if m.Quote.Bid == -1 || m.Quote.Ask == -1 {
         return -1
     }
-    return m.Ask - m.Bid
+    return m.Quote.Ask - m.Quote.Bid
 }
 
 func (m * Market) Print()  {
-    if m.LastPrice == -1 {
+    if m.Quote.Last == -1 {
         fmt.Println("No market activity yet, or server down")
         return
     }
 
     var bidstr string
-    if m.Bid != -1 {
-        bidstr = fmt.Sprintf("%5d", m.Bid)
+    if m.Quote.Bid != -1 {
+        bidstr = fmt.Sprintf("%5d", m.Quote.Bid)
     } else {
         bidstr = ""
     }
 
     var askstr string
-    if m.Ask != -1 {
-        askstr = fmt.Sprintf("%-5d", m.Ask)
+    if m.Quote.Ask != -1 {
+        askstr = fmt.Sprintf("%-5d", m.Quote.Ask)
     } else {
         askstr = ""
     }
