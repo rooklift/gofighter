@@ -189,8 +189,8 @@ type Quote struct {
     QuoteTime           string      `json:"quoteTime"`
 }
 
-// The Quote is special since some values not present get set to -1 instead of 0.
-// Therefore, a custom UnmarshalJSON() method is required.
+// The Quote is special since I want some absent values to get set to -1
+// instead of 0. Therefore, a custom UnmarshalJSON() method is required.
 // The Go unmarshaller calls this method automatically as needed...
 
 func (q * Quote) UnmarshalJSON(b []byte)  error {
